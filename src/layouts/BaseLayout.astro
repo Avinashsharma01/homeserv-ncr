@@ -5,6 +5,7 @@
  */
 import "../styles/global.css";
 import { Home, PlusCircle } from "lucide-astro";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   class?: string;
@@ -28,6 +29,7 @@ const { class: className } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
     <slot name="head" />
   </head>
   <body class={className}>

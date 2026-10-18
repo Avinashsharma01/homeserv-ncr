@@ -5,6 +5,10 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
   site: "https://delhincrhomeservices.com",
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover",
+  },
   integrations: [
     sitemap({
       filter: (page) => !page.includes("/admin"),
