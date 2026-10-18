@@ -1,0 +1,11 @@
+# Cache static assets (CSS, JS, bundled icons) forever since they have content hashes
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache images and favicons for 7 days
+/favicon.*
+  Cache-Control: public, max-age=604800
+
+# Cache HTML pages in browser with instant stale-while-revalidate
+/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
