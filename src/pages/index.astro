@@ -1,0 +1,221 @@
+---
+/**
+ * Homepage — Main landing page
+ * Hero + Search + Service Categories + City Grid + FAQ
+ * All static HTML, zero client JS
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SEOHead from "../components/SEOHead.astro";
+import SearchBar from "../components/SearchBar.astro";
+import ListingCard from "../components/ListingCard.astro";
+import { regions } from "../data/regions";
+import { categories } from "../data/categories";
+import { listings } from "../data/listings";
+import { Star } from "lucide-astro";
+import CategoryIcon from "../components/CategoryIcon.astro";
+
+const premiumListings = listings.filter((l) => l.premium);
+const recentListings = listings.filter((l) => !l.premium).slice(0, 6);
+
+const faqItems = [
+  {
+    question: "What is HomeServ NCR?",
+    answer:
+      "HomeServ NCR is a free local directory for finding verified home service professionals across Delhi, Gurgaon, Noida, Faridabad, Ghaziabad, and Greater Noida. Browse plumbers, electricians, AC technicians, movers, painters, and more — all with real reviews and direct contact.",
+  },
+  {
+    question: "Is it free to post a listing on HomeServ NCR?",
+    answer:
+      "Yes, posting a basic listing is completely free. You can also upgrade to a Premium listing for better visibility and priority placement in search results.",
+  },
+  {
+    question: "How do I contact a service provider?",
+    answer:
+      "Every listing includes a direct Call and WhatsApp button. Simply click to connect instantly with the service provider — no middlemen, no commission.",
+  },
+  {
+    question: "Are the service providers verified?",
+    answer:
+      "Listings marked with a 'Verified' badge have been checked for identity, business registration, and customer reviews. We recommend choosing verified providers for added safety.",
+  },
+  {
+    question: "Which areas in Delhi-NCR do you cover?",
+    answer:
+      "We cover all major areas across Delhi (Connaught Place, Hauz Khas, Dwarka, Rohini, etc.), Gurgaon (Cyber City, DLF Phases, Golf Course Road), Noida (Sector 18, 62, 120+), Greater Noida, Faridabad (NIT, Ballabgarh), and Ghaziabad (Indirapuram, Vaishali, Crossing Republik).",
+  },
+];
+---
+
+<BaseLayout>
+  <SEOHead
+    slot="head"
+    title="Home Services in Delhi NCR — Verified Plumbers, Electricians, AC Repair | HomeServ NCR"
+    description="Find trusted home service professionals across Delhi, Gurgaon, Noida, Faridabad & Ghaziabad. Verified plumbers, electricians, AC repair, movers & packers. Direct call & WhatsApp. No advance payment."
+    canonicalPath="/"
+    breadcrumbs={[{ name: "Home", url: "/" }]}
+    faqItems={faqItems}
+  />
+
+  <!-- Hero Section -->
+  <section class="text-center py-8 sm:py-12">
+    <h1
+      class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-ink leading-tight mb-4"
+    >
+      Trusted Home Services<br />
+      <span class="text-brand">Across Delhi-NCR</span>
+    </h1>
+    <p class="text-lg text-muted max-w-2xl mx-auto mb-8">
+      Find verified plumbers, electricians, AC technicians, movers & packers,
+      and 100+ home service professionals near you. Direct contact no middlemen.
+    </p>
+
+    <!-- Search Bar -->
+    <div class="max-w-3xl mx-auto">
+      <SearchBar />
+    </div>
+  </section>
+
+  <!-- Service Categories -->
+  <section id="services" class="py-8">
+    <h2 class="text-2xl font-bold text-ink mb-6">Browse by Service</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+      {
+        categories.map((cat) => (
+          <a
+            href={`/search?category=${cat.slug}`}
+            class="card p-4 text-center no-underline hover:border-brand hover:shadow-md transition-all group flex flex-col items-center"
+          >
+            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-brand group-hover:text-white transition-all shadow-xs">
+              <CategoryIcon category={cat.slug} size={24} />
+            </div>
+            <span class="text-sm font-semibold text-ink group-hover:text-brand transition-colors">
+              {cat.name}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Premium Listings -->
+  {
+    premiumListings.length > 0 && (
+      <section class="py-8">
+        <h2 class="text-2xl font-bold text-ink mb-6 flex items-center gap-2">
+          <Star size={24} class="fill-amber-400 text-amber-500" /> Featured
+          Service Providers
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {premiumListings.map((listing) => (
+            <ListingCard
+              id={listing.id}
+              slug={listing.slug}
+              title={listing.title}
+              category={listing.category}
+              locality={listing.locality}
+              region={listing.region}
+              providerName={listing.providerName}
+              description={listing.description}
+              rating={listing.rating}
+              reviewCount={listing.reviewCount}
+              price={listing.price}
+              experience={listing.experience}
+              verified={listing.verified}
+              premium={listing.premium}
+              available24x7={listing.available24x7}
+              phone={listing.phone}
+              whatsapp={listing.whatsapp}
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Recent Listings -->
+  <section class="py-8">
+    <h2 class="text-2xl font-bold text-ink mb-6">Recent Listings</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {
+        recentListings.map((listing) => (
+          <ListingCard
+            id={listing.id}
+            slug={listing.slug}
+            title={listing.title}
+            category={listing.category}
+            locality={listing.locality}
+            region={listing.region}
+            providerName={listing.providerName}
+            description={listing.description}
+            rating={listing.rating}
+            reviewCount={listing.reviewCount}
+            price={listing.price}
+            experience={listing.experience}
+            verified={listing.verified}
+            premium={listing.premium}
+            available24x7={listing.available24x7}
+            phone={listing.phone}
+            whatsapp={listing.whatsapp}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Cities Grid (Inspired by Zukho) -->
+  <section id="cities" class="py-8">
+    <h2 class="text-2xl font-bold text-ink mb-2">Explore Delhi-NCR</h2>
+    <p class="text-muted mb-6">
+      Browse home service providers by city and neighborhood
+    </p>
+
+    {
+      regions.map((region) => (
+        <div class="mb-8">
+          <h3 class="text-lg font-bold text-ink mb-3 flex items-center gap-2">
+            <a
+              href={`/${region.slug}/`}
+              class="text-brand hover:text-brand-dark no-underline"
+            >
+              {region.name} →
+            </a>
+          </h3>
+          <div class="city-grid bg-surface border border-line rounded-lg p-4">
+            {region.localities.slice(0, 10).map((loc) => (
+              <a href={`/${region.slug}/${loc.slug}/`}>{loc.name}</a>
+            ))}
+            {region.localities.length > 10 && (
+              <a href={`/${region.slug}/`} class="font-bold">
+                View all {region.localities.length} areas →
+              </a>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- FAQ Section (Schema.org FAQPage for SERP rich snippets) -->
+  <section class="py-8">
+    <h2 class="text-2xl font-bold text-ink mb-2">Frequently Asked Questions</h2>
+    <p class="text-muted mb-6">
+      Everything you need to know about HomeServ NCR
+    </p>
+
+    <div class="space-y-2">
+      {
+        faqItems.map((faq) => (
+          <details class="card p-4 group">
+            <summary class="cursor-pointer font-semibold text-ink list-none flex items-center justify-between">
+              {faq.question}
+              <span class="text-brand text-xl font-bold transition-transform group-open:rotate-45">
+                +
+              </span>
+            </summary>
+            <p class="text-muted text-sm mt-3 leading-relaxed">{faq.answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

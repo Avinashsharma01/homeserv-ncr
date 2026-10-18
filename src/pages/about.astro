@@ -1,0 +1,178 @@
+---
+/**
+ * /about.astro — About Us page
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SEOHead from "../components/SEOHead.astro";
+import { regions } from "../data/regions";
+import { Home, Zap, MapPin, ShieldCheck, Building2 } from "lucide-astro";
+---
+
+<BaseLayout>
+  <SEOHead
+    slot="head"
+    title="About HomeServ NCR — Delhi-NCR's Trusted Local Services Directory"
+    description="Learn about HomeServ NCR, Delhi-NCR's hyper-local directory connecting residents with verified plumbers, electricians, AC technicians, and home service providers."
+    canonicalPath="/about"
+    breadcrumbs={[
+      { name: "Home", url: "/" },
+      { name: "About Us", url: "/about" },
+    ]}
+  />
+
+  <nav aria-label="Breadcrumb" class="mb-6">
+    <ol class="flex items-center gap-1 text-sm text-muted">
+      <li><a href="/" class="hover:text-brand no-underline">Home</a></li>
+      <li class="before:content-['/'] before:mx-1 font-medium text-ink">
+        About Us
+      </li>
+    </ol>
+  </nav>
+
+  <div class="max-w-4xl mx-auto py-4">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <div
+        class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-50 text-brand mb-4 shadow-xs"
+      >
+        <Home size={32} />
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-ink mb-4">
+        Connecting Delhi-NCR to <span class="text-brand"
+          >Verified Local Experts</span
+        >
+      </h1>
+      <p class="text-lg text-muted max-w-2xl mx-auto leading-relaxed">
+        HomeServ NCR was founded with a single mission: to eliminate the hassle,
+        commissions, and uncertainty of finding trusted home service
+        professionals across the National Capital Region.
+      </p>
+    </div>
+
+    <!-- Core Values / Highlights -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="card p-6 border border-line rounded-2xl bg-surface">
+        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand flex items-center justify-center mb-4">
+          <Zap size={24} />
+        </div>
+        <h3 class="text-lg font-bold text-ink mb-2">Direct Contact</h3>
+        <p class="text-sm text-muted leading-relaxed">
+          No middlemen, call centers, or booking commissions. Connect directly
+          with providers via phone call or WhatsApp within seconds.
+        </p>
+      </div>
+
+      <div class="card p-6 border border-line rounded-2xl bg-surface">
+        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand flex items-center justify-center mb-4">
+          <MapPin size={24} />
+        </div>
+        <h3 class="text-lg font-bold text-ink mb-2">Hyper-Local Coverage</h3>
+        <p class="text-sm text-muted leading-relaxed">
+          From Dwarka to Indirapuram and Cyber City to Greater Noida, we cover
+          90+ micro-neighborhoods across Delhi-NCR with localized listings.
+        </p>
+      </div>
+
+      <div class="card p-6 border border-line rounded-2xl bg-surface">
+        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand flex items-center justify-center mb-4">
+          <ShieldCheck size={24} />
+        </div>
+        <h3 class="text-lg font-bold text-ink mb-2">Verified Providers</h3>
+        <p class="text-sm text-muted leading-relaxed">
+          We prioritize safety and quality. Providers marked with our Verified
+          badge have verified phone numbers and service history.
+        </p>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="card p-8 border border-line rounded-2xl bg-surface mb-16">
+      <h2 class="text-2xl font-bold text-ink mb-6 text-center">
+        How HomeServ NCR Works
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div
+            class="w-12 h-12 rounded-full bg-brand text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4"
+          >
+            1
+          </div>
+          <h4 class="font-bold text-ink mb-1">Choose Service & Locality</h4>
+          <p class="text-sm text-muted">
+            Select your required trade and neighborhood to see verified
+            providers closest to you.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-12 h-12 rounded-full bg-brand text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4"
+          >
+            2
+          </div>
+          <h4 class="font-bold text-ink mb-1">Call or WhatsApp Directly</h4>
+          <p class="text-sm text-muted">
+            Dial the technician directly or send a pre-filled WhatsApp message
+            outlining your service need.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-12 h-12 rounded-full bg-brand text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4"
+          >
+            3
+          </div>
+          <h4 class="font-bold text-ink mb-1">Pay After Service</h4>
+          <p class="text-sm text-muted">
+            Agree on terms directly with the professional and pay only after
+            your service is completed to satisfaction.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Areas Covered Grid -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-ink mb-4 text-center">
+        NCR Regions Covered
+      </h2>
+      <p class="text-center text-muted mb-6 text-sm">
+        Serving millions of residents across all major NCR hubs
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        {
+          regions.map((region) => (
+            <a
+              href={`/${region.slug}/`}
+              class="card p-4 text-center no-underline hover:border-brand transition-colors rounded-xl border border-line"
+            >
+              <Building2 size={24} class="text-brand mx-auto mb-2" />
+              <div class="font-bold text-ink text-sm">{region.name}</div>
+              <div class="text-xs text-muted">
+                {region.localities.length} areas
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center py-10 px-6 rounded-2xl bg-brand text-white">
+      <h3 class="text-2xl font-extrabold mb-2">
+        Are You a Home Service Professional?
+      </h3>
+      <p class="text-brand-100 max-w-xl mx-auto mb-6 text-sm">
+        List your business on HomeServ NCR to reach thousands of homeowners
+        looking for services in your area.
+      </p>
+      <a
+        href="/post-your-ad"
+        class="btn-primary bg-white! text-brand! hover:bg-brand-50! font-bold! text-sm"
+      >
+        Post Your Free Listing →
+      </a>
+    </div>
+  </div>
+</BaseLayout>

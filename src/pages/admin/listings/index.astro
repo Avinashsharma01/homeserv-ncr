@@ -1,0 +1,246 @@
+---
+/**
+ * /admin/listings/index.astro — Listings Management
+ * Full CRUD table for all listings with filter/search
+ */
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { listings } from "../../../data/listings";
+import { categories, getCategoryBySlug } from "../../../data/categories";
+import { regions } from "../../../data/regions";
+import {
+  Plus,
+  Star,
+  BadgeCheck,
+  Pencil,
+  Eye,
+  Trash2,
+  CheckCircle,
+} from "lucide-astro";
+---
+
+<AdminLayout title="Manage Listings" activeNav="listings">
+  <!-- Toolbar -->
+  <div class="admin-card" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;">
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+      <select class="admin-select" style="width:auto;min-width:160px;" id="filter-category">
+        <option value="">All Categories</option>
+        {categories.map((cat) => (
+          <option value={cat.slug}>{cat.name}</option>
+        ))}
+      </select>
+      <select class="admin-select" style="width:auto;min-width:160px;" id="filter-region">
+        <option value="">All Regions</option>
+        {regions.map((r) => (
+          <option value={r.slug}>{r.name}</option>
+        ))}
+      </select>
+      <select class="admin-select" style="width:auto;min-width:130px;" id="filter-status">
+        <option value="">All Status</option>
+        <option value="verified">Verified</option>
+        <option value="premium">Premium</option>
+        <option value="24x7">24/7 Available</option>
+      </select>
+    </div>
+    <a href="/admin/listings/new/" class="admin-btn admin-btn-primary" style="display:inline-flex;align-items:center;gap:0.375rem;">
+      <Plus size={16} /> Add New Listing
+    </a>
+  </div>
+
+  <!-- Listings Count -->
+  <p style="font-size:0.8125rem;color:#64748b;margin-bottom:1rem;">
+    Showing <strong>{listings.length}</strong> listing(s)
+  </p>
+
+  <!-- Listings Table -->
+  <div class="admin-card" style="padding:0;overflow:hidden;">
+    <div style="overflow-x:auto;">
+      <table class="admin-table" id="listings-table">
+        <thead>
+          <tr>
+            <th style="width:50px;"><input type="checkbox" id="select-all" /></th>
+            <th>ID</th>
+            <th>Provider / Title</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Rating</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {listings.map((listing) => {
+            const cat = getCategoryBySlug(listing.category);
+            return (
+              <tr data-category={listing.category} data-region={listing.region}
+                  data-verified={listing.verified ? "true" : "false"}
+                  data-premium={listing.premium ? "true" : "false"}
+                  data-24x7={listing.available24x7 ? "true" : "false"}>
+                <td><input type="checkbox" class="listing-checkbox" value={listing.id} /></td>
+                <td style="font-weight:700;color:#0d9488;">#{listing.id}</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.625rem;">
+                    <div>
+                      <div style="font-weight:600;color:#1e293b;">{listing.providerName}</div>
+                      <div style="font-size:0.75rem;color:#94a3b8;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{listing.title}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="admin-badge admin-badge-blue" style="text-transform:capitalize;">
+                    {listing.category.replace(/-/g, " ")}
+                  </span>
+                </td>
+                <td style="text-transform:capitalize;font-size:0.8125rem;">
+                  <div>{listing.locality.replace(/-/g, " ")}</div>
+                  <div style="color:#94a3b8;">{listing.region.replace(/-/g, " ")}</div>
+                </td>
+                <td>
+                  <span style="display:inline-flex;align-items:center;gap:0.25rem;color:#f59e0b;">
+                    <Star size={13} class="fill-amber-400 text-amber-500" /> {listing.rating}
+                  </span>
+                  <div style="font-size:0.6875rem;color:#94a3b8;">{listing.reviewCount} reviews</div>
+                </td>
+                <td style="font-weight:600;font-size:0.8125rem;white-space:nowrap;">{listing.price}</td>
+                <td>
+                  <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                    {listing.verified && (
+                      <span class="admin-badge admin-badge-green" style="display:inline-flex;align-items:center;gap:0.25rem;">
+                        <BadgeCheck size={12} /> Verified
+                      </span>
+                    )}
+                    {listing.premium && (
+                      <span class="admin-badge admin-badge-yellow" style="display:inline-flex;align-items:center;gap:0.25rem;">
+                        <Star size={12} class="fill-amber-400 text-amber-500" /> Premium
+                      </span>
+                    )}
+                    {listing.available24x7 && <span class="admin-badge admin-badge-blue">24/7</span>}
+                  </div>
+                </td>
+                <td style="font-size:0.75rem;color:#64748b;white-space:nowrap;">{listing.createdAt}</td>
+                <td>
+                  <div class="admin-actions" style="flex-direction:column;gap:0.25rem;">
+                    <a href={`/admin/listings/edit/?id=${listing.id}`} class="admin-btn admin-btn-secondary admin-btn-sm" style="display:inline-flex;align-items:center;gap:0.25rem;">
+                      <Pencil size={13} /> Edit
+                    </a>
+                    <a href={`/listing/${listing.slug}`} target="_blank" class="admin-btn admin-btn-secondary admin-btn-sm" style="display:inline-flex;align-items:center;gap:0.25rem;">
+                      <Eye size={13} /> View
+                    </a>
+                    <button class="admin-btn admin-btn-danger admin-btn-sm" data-delete={listing.id} style="display:inline-flex;align-items:center;gap:0.25rem;">
+                      <Trash2 size={13} /> Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bulk Actions Bar -->
+  <div class="admin-card" style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+    <span style="font-size:0.8125rem;color:#64748b;">Bulk Actions:</span>
+    <button class="admin-btn admin-btn-secondary admin-btn-sm" id="bulk-verify" style="display:inline-flex;align-items:center;gap:0.25rem;">
+      <BadgeCheck size={14} /> Mark Verified
+    </button>
+    <button class="admin-btn admin-btn-secondary admin-btn-sm" id="bulk-premium" style="display:inline-flex;align-items:center;gap:0.25rem;">
+      <Star size={14} /> Toggle Premium
+    </button>
+    <button class="admin-btn admin-btn-danger admin-btn-sm" id="bulk-delete" style="display:inline-flex;align-items:center;gap:0.25rem;">
+      <Trash2 size={14} /> Delete Selected
+    </button>
+  </div>
+</AdminLayout>
+
+<script>
+  // Auth guard
+  if (sessionStorage.getItem('admin_auth') !== 'true') {
+    window.location.href = '/admin/login';
+  }
+
+  // Select all checkbox
+  document.getElementById('select-all')?.addEventListener('change', (e) => {
+    const checked = (e.target as HTMLInputElement).checked;
+    document.querySelectorAll('.listing-checkbox').forEach((cb) => {
+      (cb as HTMLInputElement).checked = checked;
+    });
+  });
+
+  // Filter functionality
+  function applyFilters() {
+    const category = (document.getElementById('filter-category') as HTMLSelectElement).value;
+    const region = (document.getElementById('filter-region') as HTMLSelectElement).value;
+    const status = (document.getElementById('filter-status') as HTMLSelectElement).value;
+
+    document.querySelectorAll('#listings-table tbody tr').forEach((row) => {
+      const el = row as HTMLElement;
+      let show = true;
+      if (category && el.dataset.category !== category) show = false;
+      if (region && el.dataset.region !== region) show = false;
+      if (status === 'verified' && el.dataset.verified !== 'true') show = false;
+      if (status === 'premium' && el.dataset.premium !== 'true') show = false;
+      if (status === '24x7' && el.dataset['24x7'] !== 'true') show = false;
+      el.style.display = show ? '' : 'none';
+    });
+  }
+
+  document.getElementById('filter-category')?.addEventListener('change', applyFilters);
+  document.getElementById('filter-region')?.addEventListener('change', applyFilters);
+  document.getElementById('filter-status')?.addEventListener('change', applyFilters);
+
+  // Delete action
+  document.querySelectorAll('[data-delete]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = (btn as HTMLElement).dataset.delete;
+      if (confirm(`Delete listing #${id}? This action cannot be undone.`)) {
+        const row = btn.closest('tr');
+        if (row) row.remove();
+        alert(`Listing #${id} removed from view. (Connect Supabase for persistent database deletion)`);
+      }
+    });
+  });
+
+  function getSelectedListingIds(): string[] {
+    const selected: string[] = [];
+    document.querySelectorAll('.listing-checkbox:checked').forEach((cb) => {
+      selected.push((cb as HTMLInputElement).value);
+    });
+    return selected;
+  }
+
+  // Bulk actions
+  document.getElementById('bulk-verify')?.addEventListener('click', () => {
+    const ids = getSelectedListingIds();
+    if (ids.length === 0) {
+      alert('Please select at least one listing using the checkboxes.');
+      return;
+    }
+    alert(`Marked ${ids.length} listing(s) [${ids.join(', ')}] as Verified.`);
+  });
+
+  document.getElementById('bulk-premium')?.addEventListener('click', () => {
+    const ids = getSelectedListingIds();
+    if (ids.length === 0) {
+      alert('Please select at least one listing using the checkboxes.');
+      return;
+    }
+    alert(`Toggled Premium status for ${ids.length} listing(s) [${ids.join(', ')}].`);
+  });
+
+  document.getElementById('bulk-delete')?.addEventListener('click', () => {
+    const ids = getSelectedListingIds();
+    if (ids.length === 0) {
+      alert('Please select at least one listing to delete.');
+      return;
+    }
+    if (confirm(`Are you sure you want to delete ${ids.length} selected listing(s)?`)) {
+      document.querySelectorAll('.listing-checkbox:checked').forEach((cb) => {
+        cb.closest('tr')?.remove();
+      });
+      alert(`Deleted ${ids.length} listing(s) from view.`);
+    }
+  });
+</script>

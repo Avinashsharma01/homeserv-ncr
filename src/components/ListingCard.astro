@@ -1,0 +1,94 @@
+---
+/**
+ * ListingCard.astro — Individual listing card (like Zukho's ad cards)
+ * Supports premium/verified badges and WhatsApp/Call CTAs
+ */
+import { Star, BadgeCheck, Phone, MessageCircle } from "lucide-astro";
+import CategoryIcon from "./CategoryIcon.astro";
+
+interface Props {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  categoryIcon?: string;
+  locality: string;
+  region: string;
+  providerName: string;
+  description: string;
+  rating: number;
+  reviewCount: number;
+  price: string;
+  experience: string;
+  verified: boolean;
+  premium: boolean;
+  available24x7: boolean;
+  phone: string;
+  whatsapp: string;
+}
+
+const {
+  category, slug, title, locality, region, providerName, description,
+  rating, reviewCount, price, experience, verified, premium, available24x7,
+  phone, whatsapp,
+} = Astro.props;
+
+const whatsappUrl = `https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi, I found your listing "${title}" on HomeServ NCR. I need your service.`)}`;
+---
+
+<article class={`card p-4 sm:p-5 ${premium ? "card-premium" : ""} relative`}>
+  {premium && (
+    <span class="badge badge-premium absolute top-3 right-3 text-xs flex items-center gap-1">
+      <Star size={11} class="fill-current" /> PREMIUM
+    </span>
+  )}
+
+  <!-- Provider info row -->
+  <div class="flex items-start gap-3 mb-3">
+    <div class="w-12 h-12 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand shrink-0" aria-hidden="true">
+      <CategoryIcon category={category} size={22} />
+    </div>
+    <div class="min-w-0">
+      <h3 class="text-base sm:text-lg font-semibold text-ink leading-tight">
+        <a href={`/listing/${slug}`} class="hover:text-brand transition-colors no-underline">
+          {title}
+        </a>
+      </h3>
+      <p class="text-sm text-muted mt-0.5 capitalize">{locality.replace(/-/g, " ")}, {region.replace(/-/g, " ")}</p>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <p class="text-sm text-muted leading-relaxed mb-3 line-clamp-2">{description}</p>
+
+  <!-- Badges row -->
+  <div class="flex flex-wrap items-center gap-2 mb-3">
+    {verified && (
+      <span class="badge badge-verified flex items-center gap-1">
+        <BadgeCheck size={12} /> Verified
+      </span>
+    )}
+    {available24x7 && <span class="badge badge-24x7">24/7 Available</span>}
+    <span class="badge bg-gray-100 text-gray-700">{experience} exp.</span>
+  </div>
+
+  <!-- Rating and Price -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center gap-1.5">
+      <Star size={15} class="fill-amber-400 text-amber-500 shrink-0" />
+      <span class="text-sm font-bold text-ink">{rating}</span>
+      <span class="text-xs text-muted">({reviewCount} reviews)</span>
+    </div>
+    <span class="text-sm font-bold text-brand-dark">{price}</span>
+  </div>
+
+  <!-- CTA Buttons -->
+  <div class="flex gap-2">
+    <a href={`tel:${phone}`} class="btn-primary btn-call flex-1 text-sm flex items-center justify-center gap-2">
+      <Phone size={14} /> Call Now
+    </a>
+    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn-primary btn-wa flex-1 text-sm flex items-center justify-center gap-2">
+      <MessageCircle size={14} /> WhatsApp
+    </a>
+  </div>
+</article>

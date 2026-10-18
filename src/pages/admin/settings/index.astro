@@ -1,0 +1,174 @@
+---
+/**
+ * /admin/settings/index.astro — Site Settings
+ */
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import {
+  Globe,
+  Phone,
+  Lock,
+  ShieldAlert,
+  Rocket,
+  RefreshCw,
+  Trash2,
+  Save,
+} from "lucide-astro";
+---
+
+<AdminLayout title="Settings" activeNav="settings">
+  <!-- General Settings -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <Globe size={20} class="text-brand" />
+      <h2 style="margin:0;">General Settings</h2>
+    </div>
+    <form id="settings-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="site-name">Site Name</label>
+          <input class="admin-input" id="site-name" value="HomeServ NCR" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="site-url">Site URL</label>
+          <input class="admin-input" id="site-url" value="https://delhincrhomeservices.com" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="site-tagline">Tagline</label>
+        <input class="admin-input" id="site-tagline" value="Delhi NCR's Most Trusted Home Services Directory" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="site-desc">Default Meta Description</label>
+        <textarea class="admin-textarea" id="site-desc" style="min-height:60px;">Find trusted home service professionals across Delhi, Gurgaon, Noida, Faridabad & Ghaziabad. Verified plumbers, electricians, AC repair, movers & packers.</textarea>
+      </div>
+      <button type="submit" class="admin-btn admin-btn-primary" style="display:inline-flex;align-items:center;gap:0.375rem;">
+        <Save size={16} /> Save Settings
+      </button>
+    </form>
+  </div>
+
+  <!-- Contact Settings -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <Phone size={20} class="text-brand" />
+      <h2 style="margin:0;">Contact Information</h2>
+    </div>
+    <form id="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="contact-email">Support Email</label>
+          <input class="admin-input" id="contact-email" type="email" value="support@homeservncr.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="contact-phone">Support Phone</label>
+          <input class="admin-input" id="contact-phone" type="tel" value="+91 98765 43210" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="contact-whatsapp">WhatsApp Business</label>
+        <input class="admin-input" id="contact-whatsapp" type="tel" value="+91 98765 43210" />
+      </div>
+      <button type="submit" class="admin-btn admin-btn-primary" style="display:inline-flex;align-items:center;gap:0.375rem;">
+        <Save size={16} /> Save Contact Info
+      </button>
+    </form>
+  </div>
+
+  <!-- Security Settings -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <Lock size={20} class="text-brand" />
+      <h2 style="margin:0;">Security</h2>
+    </div>
+    <form id="security-form">
+      <div class="form-group">
+        <label class="form-label" for="admin-email">Admin Email</label>
+        <input class="admin-input" id="admin-email" type="email" value="admin@homeservncr.com" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="new-password">New Password</label>
+          <input class="admin-input" id="new-password" type="password" placeholder="Enter new password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirm-password">Confirm Password</label>
+          <input class="admin-input" id="confirm-password" type="password" placeholder="Confirm new password" />
+        </div>
+      </div>
+      <p class="form-hint" style="margin-bottom:1rem;">
+        In production, this connects to Supabase Auth with email OTP and 2FA (TOTP).
+      </p>
+      <button type="submit" class="admin-btn admin-btn-primary" style="display:inline-flex;align-items:center;gap:0.375rem;">
+        <Lock size={16} /> Update Password
+      </button>
+    </form>
+  </div>
+
+  <!-- Spam & Security Filters -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <ShieldAlert size={20} class="text-brand" />
+      <h2 style="margin:0;">Spam & Security Filters</h2>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="blocked-phones">Blocked Phone Numbers</label>
+      <textarea class="admin-textarea" id="blocked-phones" placeholder="Enter one phone number per line...">+91 9999999999
++91 8888888888</textarea>
+      <p class="form-hint">Listings from these numbers will be auto-rejected</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="blocked-keywords">Blocked Keywords</label>
+      <textarea class="admin-textarea" id="blocked-keywords" placeholder="Enter comma-separated keywords...">spam, fake, scam, fraud</textarea>
+      <p class="form-hint">Listings containing these words will be flagged for manual review</p>
+    </div>
+    <button class="admin-btn admin-btn-primary" style="display:inline-flex;align-items:center;gap:0.375rem;">
+      <Save size={16} /> Save Filters
+    </button>
+  </div>
+
+  <!-- Deployment -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <Rocket size={20} class="text-brand" />
+      <h2 style="margin:0;">Deployment & Build</h2>
+    </div>
+    <p style="font-size:0.8125rem;color:#64748b;margin-bottom:1rem;">
+      Trigger a site rebuild to publish all pending changes (new listings, locality updates, SEO overrides).
+    </p>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <button class="admin-btn admin-btn-primary" id="trigger-build" style="display:inline-flex;align-items:center;gap:0.375rem;">
+        <RefreshCw size={16} /> Trigger Rebuild
+      </button>
+      <button class="admin-btn admin-btn-secondary" id="clear-cache" style="display:inline-flex;align-items:center;gap:0.375rem;">
+        <Trash2 size={16} /> Clear CDN Cache
+      </button>
+    </div>
+    <div style="margin-top:1rem;padding:0.75rem;background:#f1f5f9;border-radius:0.375rem;">
+      <p style="font-size:0.75rem;color:#64748b;margin:0;">
+        <strong>Last build:</strong> Sep 26, 2026, 2:52 PM IST · <strong>193 pages</strong> · <strong>820ms</strong> build time
+      </p>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  if (sessionStorage.getItem('admin_auth') !== 'true') {
+    window.location.href = '/admin/login';
+  }
+
+  // Demo form handlers
+  document.querySelectorAll('form').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Settings saved successfully!\n\nIn production, this updates the database and triggers a rebuild.');
+    });
+  });
+
+  document.getElementById('trigger-build')?.addEventListener('click', () => {
+    alert('Build triggered successfully!\n\nIn production, this calls the Cloudflare Pages deploy hook API to rebuild the site.');
+  });
+
+  document.getElementById('clear-cache')?.addEventListener('click', () => {
+    alert('CDN cache cleared successfully!\n\nIn production, this calls the Cloudflare API to purge cached pages.');
+  });
+</script>

@@ -1,0 +1,195 @@
+---
+/**
+ * /admin/login.astro — Admin login page
+ * Standalone page (no sidebar), cookie-based auth
+ * In production: replace with Supabase Auth + OTP/2FA
+ */
+import "../../styles/global.css";
+import { ShieldCheck, Lock, ArrowLeft } from "lucide-astro";
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Admin Login — HomeServ NCR</title>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 1rem;
+      }
+      .login-card {
+        background: #fff;
+        border-radius: 1rem;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .login-brand {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .login-brand-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+      }
+      .login-brand h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0d9488;
+        margin: 0;
+      }
+      .login-brand p {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin: 0.25rem 0 0;
+      }
+      .login-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 0.9375rem;
+        font-family: inherit;
+        color: #1e293b;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+      }
+      .login-input:focus {
+        outline: none;
+        border-color: #0d9488;
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+      }
+      .login-group {
+        margin-bottom: 1.25rem;
+      }
+      .login-label {
+        display: block;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.375rem;
+      }
+      .login-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: #0d9488;
+        color: #fff;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .login-btn:hover {
+        background: #0f766e;
+      }
+      .login-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 0.625rem 0.875rem;
+        border-radius: 0.375rem;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        display: none;
+      }
+      .login-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.75rem;
+        color: #94a3b8;
+      }
+      .login-footer a {
+        color: #0d9488;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-brand-icon">
+          <div style="background:#ccfbf1;color:#0d9488;padding:0.75rem;border-radius:1rem;display:flex;">
+            <ShieldCheck size={36} />
+          </div>
+        </div>
+        <h1>HomeServ NCR</h1>
+        <p>Admin Control Panel</p>
+      </div>
+
+      <div class="login-error" id="login-error">
+        Invalid email or password. Please try again.
+      </div>
+
+      <form id="login-form">
+        <div class="login-group">
+          <label class="login-label" for="email">Email Address</label>
+          <input class="login-input" type="email" id="email" name="email" placeholder="admin@homeservncr.com" required autocomplete="email" />
+        </div>
+
+        <div class="login-group">
+          <label class="login-label" for="password">Password</label>
+          <input class="login-input" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+
+        <button type="submit" class="login-btn">
+          <Lock size={18} /> Sign In
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Demo credentials: <strong>admin@homeservncr.com</strong> / <strong>admin123</strong></p>
+        <p style="margin-top:0.5rem;"><a href="/"><ArrowLeft size={13} /> Back to public site</a></p>
+      </div>
+    </div>
+
+    <script>
+      // Demo auth — in production, replace with Supabase Auth
+      const DEMO_EMAIL = 'admin@homeservncr.com';
+      const DEMO_PASS = 'admin123';
+
+      document.getElementById('login-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = (document.getElementById('email') as HTMLInputElement).value;
+        const pass = (document.getElementById('password') as HTMLInputElement).value;
+
+        if (email === DEMO_EMAIL && pass === DEMO_PASS) {
+          sessionStorage.setItem('admin_auth', 'true');
+          sessionStorage.setItem('admin_email', email);
+          window.location.href = '/admin/';
+        } else {
+          const err = document.getElementById('login-error');
+          if (err) err.style.display = 'block';
+        }
+      });
+
+      // Redirect if already logged in
+      if (sessionStorage.getItem('admin_auth') === 'true') {
+        window.location.href = '/admin/';
+      }
+    </script>
+  </body>
+</html>

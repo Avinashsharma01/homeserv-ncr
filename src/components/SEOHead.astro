@@ -1,0 +1,109 @@
+---
+/**
+ * SEOHead.astro — Reusable SEO component
+ * Renders dynamic title, meta, canonical, OpenGraph, and JSON-LD schema
+ */
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  breadcrumbs: { name: string; url: string }[];
+  faqItems?: { question: string; answer: string }[];
+  localBusiness?: {
+    name: string;
+    areaServed: string;
+    lat: number;
+    lng: number;
+    postalCode: string;
+  };
+}
+
+const { title, description, canonicalPath, breadcrumbs, faqItems, localBusiness } = Astro.props;
+const siteUrl = Astro.site?.origin || "https://delhincrhomeservices.com";
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+
+// Build BreadcrumbList JSON-LD
+const breadcrumbLD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.name,
+    item: `${siteUrl}${item.url}`,
+  })),
+};
+
+// Build FAQPage JSON-LD (if FAQs provided)
+const faqLD = faqItems?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqItems.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    }
+  : null;
+
+// Build LocalBusiness JSON-LD (if provided)
+const localBusinessLD = localBusiness
+  ? {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      name: localBusiness.name,
+      areaServed: {
+        "@type": "Place",
+        name: localBusiness.areaServed,
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: localBusiness.lat,
+        longitude: localBusiness.lng,
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: localBusiness.areaServed,
+        addressRegion: "Delhi NCR",
+        addressCountry: "IN",
+        postalCode: localBusiness.postalCode,
+      },
+    }
+  : null;
+---
+
+<!-- Primary Meta -->
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- OpenGraph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content="Delhi NCR Home Services" />
+<meta property="og:locale" content="en_IN" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+
+<!-- Geo Targeting -->
+<meta name="geo.region" content="IN-DL" />
+<meta name="geo.placename" content="Delhi NCR" />
+
+<!-- Structured Data: BreadcrumbList -->
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbLD)} />
+
+<!-- Structured Data: FAQPage -->
+{faqLD && <script type="application/ld+json" set:html={JSON.stringify(faqLD)} />}
+
+<!-- Structured Data: LocalBusiness -->
+{localBusinessLD && <script type="application/ld+json" set:html={JSON.stringify(localBusinessLD)} />}

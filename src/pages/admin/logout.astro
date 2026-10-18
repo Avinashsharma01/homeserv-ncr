@@ -1,0 +1,60 @@
+---
+/**
+ * /admin/logout.astro — Admin logout handler
+ */
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Logging Out — HomeServ NCR Admin</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #fff;
+      }
+      .card {
+        text-align: center;
+        padding: 2.5rem;
+        background: #1e293b;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+      .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid rgba(255,255,255,0.2);
+        border-top-color: #0d9488;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1.5rem;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="spinner"></div>
+      <h2 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Signing Out...</h2>
+      <p style="margin: 0; color: #94a3b8; font-size: 0.875rem;">Clearing session and redirecting to login</p>
+    </div>
+
+    <script>
+      sessionStorage.removeItem('admin_auth');
+      sessionStorage.removeItem('admin_email');
+      setTimeout(() => {
+        window.location.href = '/admin/login';
+      }, 500);
+    </script>
+  </body>
+</html>

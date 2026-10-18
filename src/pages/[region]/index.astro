@@ -1,0 +1,159 @@
+---
+/**
+ * [region]/index.astro — Region landing page (Delhi, Gurgaon, Noida, etc.)
+ * Programmatic SEO: generates a static page per region with all localities
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SEOHead from "../../components/SEOHead.astro";
+import SearchBar from "../../components/SearchBar.astro";
+import ListingCard from "../../components/ListingCard.astro";
+import { regions, type Region } from "../../data/regions";
+import { categories, getCategoryBySlug } from "../../data/categories";
+import { getListings } from "../../data/listings";
+
+export function getStaticPaths() {
+  return regions.map((region) => ({
+    params: { region: region.slug },
+    props: { region },
+  }));
+}
+
+interface Props {
+  region: Region;
+}
+
+const { region } = Astro.props;
+const regionListings = getListings({ region: region.slug });
+
+const faqItems = [
+  {
+    question: `How do I find a plumber in ${region.name}?`,
+    answer: `Browse our verified plumber listings in ${region.name}. Each listing includes ratings, experience, pricing, and direct Call/WhatsApp buttons to connect instantly.`,
+  },
+  {
+    question: `Are home service providers in ${region.name} verified?`,
+    answer: `Yes, providers with a "Verified" badge have undergone identity and business registration checks. We recommend choosing verified professionals for safety.`,
+  },
+  {
+    question: `What home services are available in ${region.name}?`,
+    answer: `We cover plumbers, electricians, AC repair, carpenters, painters, movers & packers, pest control, home cleaning, RO/water purifier service, and appliance repair across all areas of ${region.name}.`,
+  },
+  {
+    question: `Is there any charge to book a service provider from ${region.name}?`,
+    answer: `No, HomeServ NCR is a free directory. You contact providers directly — no commission, no booking fees. Pricing is set by individual service providers.`,
+  },
+];
+---
+
+<BaseLayout>
+  <SEOHead
+    slot="head"
+    title={`Home Services in ${region.name} — Verified Plumbers, Electricians, AC Repair | HomeServ NCR`}
+    description={region.description}
+    canonicalPath={`/${region.slug}/`}
+    breadcrumbs={[
+      { name: "Home", url: "/" },
+      { name: region.name, url: `/${region.slug}/` },
+    ]}
+    faqItems={faqItems}
+  />
+
+  <!-- Breadcrumbs -->
+  <nav aria-label="Breadcrumb" class="mb-4">
+    <ol class="flex items-center gap-1 text-sm text-muted">
+      <li><a href="/" class="hover:text-brand no-underline">Home</a></li>
+      <li class="before:content-['/'] before:mx-1">{region.name}</li>
+    </ol>
+  </nav>
+
+  <!-- Region Hero -->
+  <section class="mb-8">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-ink mb-3">
+      Home Services in <span class="text-brand">{region.name}</span>
+    </h1>
+    <p class="text-muted text-lg leading-relaxed max-w-3xl">{region.description}</p>
+  </section>
+
+  <!-- Search -->
+  <div class="mb-8">
+    <SearchBar />
+  </div>
+
+  <!-- Service Categories for this region -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-ink mb-4">Services in {region.name}</h2>
+    <div class="flex flex-wrap gap-2">
+      {categories.map((cat) => (
+        <a
+          href={`/search?region=${region.slug}&category=${cat.slug}`}
+          class="inline-flex items-center gap-1.5 px-4 py-2 bg-surface border border-line rounded-full text-sm font-medium text-ink hover:border-brand hover:text-brand no-underline transition-colors"
+        >
+          {cat.icon} {cat.name}
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Listings in this region -->
+  {regionListings.length > 0 && (
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-ink mb-4">Service Providers in {region.name}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {regionListings.map((listing) => {
+          const cat = getCategoryBySlug(listing.category);
+          return (
+            <ListingCard
+              id={listing.id}
+              slug={listing.slug}
+              title={listing.title}
+              category={listing.category}
+              locality={listing.locality}
+              region={listing.region}
+              providerName={listing.providerName}
+              description={listing.description}
+              rating={listing.rating}
+              reviewCount={listing.reviewCount}
+              price={listing.price}
+              experience={listing.experience}
+              verified={listing.verified}
+              premium={listing.premium}
+              available24x7={listing.available24x7}
+              phone={listing.phone}
+              whatsapp={listing.whatsapp}
+            />
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- All Localities in Region (City Grid) -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-ink mb-2">All Areas in {region.name}</h2>
+    <p class="text-muted text-sm mb-4">Browse home services by neighborhood</p>
+
+    <div class="city-grid bg-surface border border-line rounded-lg p-4">
+      {region.localities.map((loc) => (
+        <a href={`/${region.slug}/${loc.slug}/`}>
+          {loc.name}
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-ink mb-4">FAQs — Home Services in {region.name}</h2>
+    <div class="space-y-2">
+      {faqItems.map((faq) => (
+        <details class="card p-4 group">
+          <summary class="cursor-pointer font-semibold text-ink list-none flex items-center justify-between">
+            {faq.question}
+            <span class="text-brand text-xl font-bold transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="text-muted text-sm mt-3 leading-relaxed">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

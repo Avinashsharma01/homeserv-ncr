@@ -1,0 +1,127 @@
+---
+/**
+ * /admin/localities/index.astro — Localities Management
+ * View, add, and manage all Delhi-NCR localities
+ */
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { regions } from "../../../data/regions";
+import { MapPin, Plus, ExternalLink, Pencil, Trash2 } from "lucide-astro";
+---
+
+<AdminLayout title="Manage Localities" activeNav="localities">
+  <!-- Add New Locality -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <Plus size={20} class="text-brand" />
+      <h2 style="margin:0;">Add New Locality</h2>
+    </div>
+
+    <form id="add-locality-form" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:0.75rem;align-items:end;">
+      <div>
+        <label class="form-label" for="new-region">Region</label>
+        <select class="admin-select" id="new-region" required>
+          <option value="">Select</option>
+          {regions.map((r) => <option value={r.slug}>{r.name}</option>)}
+        </select>
+      </div>
+      <div>
+        <label class="form-label" for="new-name">Locality Name</label>
+        <input class="admin-input" id="new-name" required placeholder="e.g., Vasant Vihar" />
+      </div>
+      <div>
+        <label class="form-label" for="new-pin">PIN Code</label>
+        <input class="admin-input" id="new-pin" required placeholder="e.g., 110057" maxlength="6" />
+      </div>
+      <div>
+        <label class="form-label" for="new-coords">Lat, Lng</label>
+        <input class="admin-input" id="new-coords" placeholder="28.5570, 77.1680" />
+      </div>
+      <button type="submit" class="admin-btn admin-btn-primary" style="height:38px;display:inline-flex;align-items:center;gap:0.25rem;">
+        <Plus size={16} /> Add
+      </button>
+    </form>
+  </div>
+
+  <!-- Region-wise Locality Tables -->
+  {regions.map((region) => (
+    <div class="admin-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <MapPin size={20} class="text-brand shrink-0" />
+          <h2 style="margin:0;">
+            {region.name}
+            <span style="font-weight:400;font-size:0.8125rem;color:#64748b;margin-left:0.5rem;">
+              {region.state} · {region.localities.length} localities
+            </span>
+          </h2>
+        </div>
+        <a href={`/${region.slug}/`} target="_blank" class="admin-btn admin-btn-secondary admin-btn-sm" style="display:inline-flex;align-items:center;gap:0.25rem;">
+          <ExternalLink size={13} /> View Page
+        </a>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Locality Name</th>
+              <th>Slug</th>
+              <th>PIN Code(s)</th>
+              <th>Coordinates</th>
+              <th>Page URL</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {region.localities.map((loc, i) => (
+              <tr>
+                <td style="color:#94a3b8;font-size:0.75rem;">{i + 1}</td>
+                <td style="font-weight:600;">{loc.name}</td>
+                <td><code style="font-size:0.75rem;background:#f1f5f9;padding:0.125rem 0.375rem;border-radius:0.25rem;">{loc.slug}</code></td>
+                <td>{loc.pinCodes.join(", ")}</td>
+                <td style="font-size:0.75rem;color:#64748b;">{loc.lat}, {loc.lng}</td>
+                <td>
+                  <a href={`/${region.slug}/${loc.slug}/`} target="_blank" style="font-size:0.75rem;color:#0d9488;text-decoration:none;">
+                    /{region.slug}/{loc.slug}/
+                  </a>
+                </td>
+                <td>
+                  <div class="admin-actions">
+                    <button class="admin-btn admin-btn-secondary admin-btn-sm" title="Edit" style="display:inline-flex;align-items:center;justify-content:center;">
+                      <Pencil size={13} />
+                    </button>
+                    <button class="admin-btn admin-btn-danger admin-btn-sm" title="Delete" style="display:inline-flex;align-items:center;justify-content:center;">
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  ))}
+
+  <!-- Summary -->
+  <div class="admin-card" style="text-align:center;">
+    <p style="font-size:0.8125rem;color:#64748b;">
+      Total: <strong>{regions.reduce((sum, r) => sum + r.localities.length, 0)}</strong> localities across <strong>{regions.length}</strong> regions.
+      Each locality generates a unique, SEO-optimized static page.
+    </p>
+  </div>
+</AdminLayout>
+
+<script>
+  if (sessionStorage.getItem('admin_auth') !== 'true') {
+    window.location.href = '/admin/login';
+  }
+
+  document.getElementById('add-locality-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = (document.getElementById('new-name') as HTMLInputElement).value;
+    const region = (document.getElementById('new-region') as HTMLSelectElement).value;
+    alert(`Locality "${name}" added to ${region} successfully!\n\nIn production, this writes to Supabase and triggers a rebuild to generate the new locality page.`);
+  });
+</script>

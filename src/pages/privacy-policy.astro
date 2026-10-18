@@ -1,0 +1,94 @@
+---
+/**
+ * /privacy-policy.astro — Privacy Policy page
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SEOHead from "../components/SEOHead.astro";
+---
+
+<BaseLayout>
+  <SEOHead
+    slot="head"
+    title="Privacy Policy — HomeServ NCR"
+    description="Privacy Policy for HomeServ NCR. Learn how we collect, protect, and use your personal information when using our local directory platform."
+    canonicalPath="/privacy-policy"
+    breadcrumbs={[
+      { name: "Home", url: "/" },
+      { name: "Privacy Policy", url: "/privacy-policy" },
+    ]}
+  />
+
+  <nav aria-label="Breadcrumb" class="mb-6">
+    <ol class="flex items-center gap-1 text-sm text-muted">
+      <li><a href="/" class="hover:text-brand no-underline">Home</a></li>
+      <li class="before:content-['/'] before:mx-1 font-medium text-ink">Privacy Policy</li>
+    </ol>
+  </nav>
+
+  <article class="max-w-3xl mx-auto py-4 prose prose-slate">
+    <h1 class="text-3xl font-extrabold text-ink mb-2">Privacy Policy</h1>
+    <p class="text-sm text-muted mb-8">Last Updated: October 2026</p>
+
+    <div class="space-y-6 text-sm leading-relaxed text-ink/80">
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">1. Overview</h2>
+        <p>
+          HomeServ NCR ("we", "our", or "us") operates the website located at <strong>delhincrhomeservices.com</strong>. This Privacy Policy informs users of our policies regarding the collection, use, and disclosure of personal data when you use our directory service.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">2. Information We Collect</h2>
+        <p class="mb-2">We collect information in the following circumstances:</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Listing Submissions:</strong> When service providers submit listings, we collect business name, contact phone number, WhatsApp number, service description, rates, and coverage areas.</li>
+          <li><strong>Direct Contact Data:</strong> When users click to call or WhatsApp providers, these interactions happen directly on your mobile device or third-party WhatsApp platform. We do not record or intercept your conversations or messages.</li>
+          <li><strong>Log Data & Cookies:</strong> We collect standard web traffic metrics including browser type, pages viewed, device type, and referring URLs to optimize page speed and search rankings.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">3. How We Use Your Information</h2>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>To display service provider contact info publicly on directory listings so potential customers can reach you.</li>
+          <li>To verify identity and prevent spam, misleading profiles, or abusive listings.</li>
+          <li>To operate, maintain, and optimize site speed and SEO ranking across Delhi-NCR search queries.</li>
+          <li>To respond to user inquiries, customer service requests, or listing update requests.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">4. Sharing and Disclosure</h2>
+        <p>
+          We do not sell, trade, or rent personal identification information to third parties. Public listing information (such as your business name, mobile number, and WhatsApp link) is intentionally published on our public website to allow customers to reach you for local home services.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">5. Third-Party Links & Platforms</h2>
+        <p>
+          Our site includes direct telephone links (<code>tel:</code>) and WhatsApp links (<code>wa.me</code>). Once you leave our website or launch external apps, your privacy is governed by the applicable third-party platform's privacy policy.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">6. Data Retention and Deletion</h2>
+        <p>
+          Service providers may request correction, pause, or complete deletion of their directory listing at any time by sending an email with their registered phone number to <a href="mailto:support@homeservncr.com" class="text-brand">support@homeservncr.com</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">7. Contact Us</h2>
+        <p>
+          If you have questions about this Privacy Policy or data handling, please reach out to:
+        </p>
+        <p class="mt-2 font-medium">
+          HomeServ NCR Privacy Officer<br />
+          Email: <a href="mailto:support@homeservncr.com" class="text-brand">support@homeservncr.com</a><br />
+          New Delhi, India
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,170 @@
+---
+/**
+ * listing/[slug].astro — Individual listing detail page
+ * Full service provider profile with Schema.org Service markup
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SEOHead from "../../components/SEOHead.astro";
+import { listings, type Listing } from "../../data/listings";
+import { getCategoryBySlug } from "../../data/categories";
+import { getRegionBySlug, getLocalityBySlug } from "../../data/regions";
+import { Star, BadgeCheck, Phone, MessageCircle, MapPin, Wrench, Calendar, Banknote, ShieldCheck } from "lucide-astro";
+import CategoryIcon from "../../components/CategoryIcon.astro";
+
+export function getStaticPaths() {
+  return listings.map((listing) => ({
+    params: { slug: listing.slug },
+    props: { listing },
+  }));
+}
+
+interface Props {
+  listing: Listing;
+}
+
+const { listing } = Astro.props;
+const cat = getCategoryBySlug(listing.category);
+const region = getRegionBySlug(listing.region);
+const locality = getLocalityBySlug(listing.region, listing.locality);
+const localityName = locality?.name || listing.locality.replace(/-/g, " ");
+const regionName = region?.name || listing.region.replace(/-/g, " ");
+
+const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi, I found your listing "${listing.title}" on HomeServ NCR. I need your service.`)}`;
+---
+
+<BaseLayout>
+  <SEOHead
+    slot="head"
+    title={`${listing.title} | ${cat?.name || listing.category} in ${localityName}, ${regionName}`}
+    description={listing.description}
+    canonicalPath={`/listing/${listing.slug}`}
+    breadcrumbs={[
+      { name: "Home", url: "/" },
+      { name: regionName, url: `/${listing.region}/` },
+      { name: localityName, url: `/${listing.region}/${listing.locality}/` },
+      { name: listing.providerName, url: `/listing/${listing.slug}` },
+    ]}
+    localBusiness={{
+      name: listing.providerName,
+      areaServed: `${localityName}, ${regionName}`,
+      lat: locality?.lat || 28.6139,
+      lng: locality?.lng || 77.2090,
+      postalCode: locality?.pinCodes[0] || "110001",
+    }}
+  />
+
+  <!-- Breadcrumbs -->
+  <nav aria-label="Breadcrumb" class="mb-6">
+    <ol class="flex items-center gap-1 text-sm text-muted flex-wrap">
+      <li><a href="/" class="hover:text-brand no-underline">Home</a></li>
+      <li class="before:content-['/'] before:mx-1"><a href={`/${listing.region}/`} class="hover:text-brand no-underline">{regionName}</a></li>
+      <li class="before:content-['/'] before:mx-1"><a href={`/${listing.region}/${listing.locality}/`} class="hover:text-brand no-underline">{localityName}</a></li>
+      <li class="before:content-['/'] before:mx-1 font-medium text-ink truncate max-w-50">{listing.providerName}</li>
+    </ol>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Content -->
+    <div class="lg:col-span-2">
+      <!-- Header -->
+      <div class={`card p-6 mb-6 ${listing.premium ? "card-premium" : ""}`}>
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand shrink-0">
+            <CategoryIcon category={listing.category} size={32} />
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-ink leading-tight mb-1">
+              {listing.title}
+            </h1>
+            <p class="text-muted capitalize">
+              {cat?.name || listing.category} · {localityName}, {regionName}
+            </p>
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          {listing.premium && (
+            <span class="badge badge-premium flex items-center gap-1">
+              <Star size={11} class="fill-current" /> PREMIUM
+            </span>
+          )}
+          {listing.verified && (
+            <span class="badge badge-verified flex items-center gap-1">
+              <BadgeCheck size={12} /> Verified
+            </span>
+          )}
+          {listing.available24x7 && <span class="badge badge-24x7">24/7 Available</span>}
+          <span class="badge bg-gray-100 text-gray-700">{listing.experience} experience</span>
+        </div>
+
+        <!-- Rating -->
+        <div class="flex items-center gap-2 mb-6">
+          <Star size={18} class="fill-amber-400 text-amber-500 shrink-0" />
+          <span class="text-lg font-bold text-ink">{listing.rating}</span>
+          <span class="text-muted">({listing.reviewCount} reviews)</span>
+        </div>
+
+        <!-- Description -->
+        <h2 class="text-lg font-bold text-ink mb-2">About</h2>
+        <p class="text-muted leading-relaxed mb-6">{listing.description}</p>
+
+        <!-- Tags -->
+        <h2 class="text-lg font-bold text-ink mb-2">Specializations</h2>
+        <div class="flex flex-wrap gap-2 mb-6">
+          {listing.tags.map((tag) => (
+            <span class="px-3 py-1 bg-brand-50 text-brand-dark text-sm font-medium rounded-full">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <!-- Pricing -->
+        <div class="bg-bg rounded-lg p-4">
+          <h2 class="text-lg font-bold text-ink mb-1 flex items-center gap-2">
+            <Banknote size={20} class="text-brand" /> Pricing
+          </h2>
+          <p class="text-2xl font-extrabold text-brand">{listing.price}</p>
+          <p class="text-sm text-muted mt-1">Final price depends on scope of work. No hidden charges.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar — Contact Card -->
+    <div class="lg:col-span-1">
+      <div class="card p-6 sticky top-20">
+        <h2 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
+          <Phone size={18} class="text-brand" /> Contact {listing.providerName}
+        </h2>
+
+        <div class="space-y-3 mb-6">
+          <a href={`tel:${listing.phone}`} class="btn-primary btn-call w-full text-base flex items-center justify-center gap-2">
+            <Phone size={16} /> Call Now
+          </a>
+          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn-primary btn-wa w-full text-base flex items-center justify-center gap-2">
+            <MessageCircle size={16} /> WhatsApp
+          </a>
+        </div>
+
+        <div class="text-sm text-muted space-y-2">
+          <p class="flex items-center gap-2">
+            <MapPin size={15} class="text-muted shrink-0" /> <span><strong>Area:</strong> {localityName}, {regionName}</span>
+          </p>
+          <p class="flex items-center gap-2">
+            <Wrench size={15} class="text-muted shrink-0" /> <span><strong>Service:</strong> {cat?.name || listing.category}</span>
+          </p>
+          <p class="flex items-center gap-2">
+            <Calendar size={15} class="text-muted shrink-0" /> <span><strong>Listed:</strong> {listing.createdAt}</span>
+          </p>
+        </div>
+
+        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2.5">
+          <ShieldCheck size={18} class="text-green-700 shrink-0 mt-0.5" />
+          <p class="text-xs text-green-800 font-medium leading-relaxed">
+            This provider is available for direct contact. No advance payment needed — pay only after service is completed.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

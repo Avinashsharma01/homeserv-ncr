@@ -1,0 +1,400 @@
+---
+/**
+ * /admin/seo/index.astro — SEO Overrides Panel
+ * Override title tags, meta descriptions, H1 headings, and custom FAQs
+ * for specific high-value locality pages without touching code
+ */
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { regions } from "../../../data/regions";
+import { Lightbulb, Plus, Save, RotateCcw, Pencil, Trash2, Search, TableProperties } from "lucide-astro";
+---
+
+<AdminLayout title="SEO Overrides" activeNav="seo">
+  <!-- Info Banner -->
+  <div class="admin-card" style="background:#f0fdfa;border-color:#99f6e4;">
+    <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+      <div style="background:#ccfbf1;color:#0f766e;padding:0.375rem;border-radius:0.5rem;display:flex;">
+        <Lightbulb size={20} />
+      </div>
+      <div>
+        <h2 style="margin:0 0 0.25rem;font-size:0.9375rem;color:#0f766e;">
+          How SEO Overrides Work
+        </h2>
+        <p style="margin:0;font-size:0.8125rem;color:#115e59;line-height:1.6;">
+          By default, every locality page auto-generates its title, meta
+          description, and H1 from the data. Use this panel to <strong
+            >manually override</strong
+          > SEO tags for high-traffic pages (e.g., "Plumber in Delhi" or "AC Repair
+          Gurgaon") to fine-tune ranking performance without modifying code.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Override Form -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <Plus size={20} class="text-brand" />
+      <h2 style="margin:0;">Add SEO Override</h2>
+    </div>
+
+    <form id="seo-form">
+      <!-- Target Page -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="seo-region">Region</label>
+          <select class="admin-select" id="seo-region" required>
+            <option value="">Select region</option>
+            {regions.map((r) => <option value={r.slug}>{r.name}</option>)}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="seo-locality">Locality</label>
+          <select class="admin-select" id="seo-locality" required>
+            <option value="">Select region first</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Title Override -->
+      <div class="form-group">
+        <label class="form-label" for="seo-title">Custom Title Tag</label>
+        <input
+          class="admin-input"
+          id="seo-title"
+          placeholder="e.g., Best Plumber in Hauz Khas, Delhi — Verified & Affordable | HomeServ"
+        />
+        <p class="form-hint">
+          Keep under 60 characters. Leave blank to use auto-generated title.
+        </p>
+        <div style="margin-top:0.375rem;">
+          <span id="title-counter" style="font-size:0.75rem;color:#64748b;"
+            >0 / 60 characters</span
+          >
+        </div>
+      </div>
+
+      <!-- Meta Description Override -->
+      <div class="form-group">
+        <label class="form-label" for="seo-description"
+          >Custom Meta Description</label
+        >
+        <textarea
+          class="admin-textarea"
+          id="seo-description"
+          style="min-height:80px;"
+          placeholder="e.g., Find verified plumbers in Hauz Khas, South Delhi. Emergency pipe repair, bathroom fitting, water tank cleaning. ₹300 onwards. Call now."
+        ></textarea>
+        <p class="form-hint">
+          Keep under 155 characters. Leave blank to use auto-generated
+          description.
+        </p>
+        <div style="margin-top:0.375rem;">
+          <span id="desc-counter" style="font-size:0.75rem;color:#64748b;"
+            >0 / 155 characters</span
+          >
+        </div>
+      </div>
+
+      <!-- H1 Override -->
+      <div class="form-group">
+        <label class="form-label" for="seo-h1">Custom H1 Heading</label>
+        <input
+          class="admin-input"
+          id="seo-h1"
+          placeholder="e.g., Plumber in Hauz Khas — Trusted & Affordable Service"
+        />
+        <p class="form-hint">
+          Override the main heading visitors see. Leave blank for default.
+        </p>
+      </div>
+
+      <!-- Custom FAQ -->
+      <div class="form-group">
+        <label class="form-label"
+          >Custom FAQ Items (for Schema.org FAQPage)</label
+        >
+        <div id="faq-container">
+          <div
+            class="faq-row"
+            style="display:grid;grid-template-columns:1fr 2fr auto;gap:0.5rem;margin-bottom:0.5rem;"
+          >
+            <input class="admin-input faq-q" placeholder="Question" />
+            <input class="admin-input faq-a" placeholder="Answer" />
+            <button
+              type="button"
+              class="admin-btn admin-btn-danger admin-btn-sm faq-del-btn"
+              onclick="this.closest('.faq-row')?.remove()"
+              style="display:inline-flex;align-items:center;justify-content:center;"
+              title="Remove FAQ"
+            ><Trash2 size={13} /></button>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="admin-btn admin-btn-secondary admin-btn-sm"
+          id="add-faq-btn"
+          style="margin-top:0.5rem;display:inline-flex;align-items:center;gap:0.375rem;"
+        >
+          <Plus size={15} /> Add FAQ
+        </button>
+      </div>
+
+      <!-- Submit -->
+      <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+        <button
+          type="submit"
+          class="admin-btn admin-btn-primary"
+          style="padding:0.625rem 1.5rem;display:inline-flex;align-items:center;gap:0.5rem;"
+        >
+          <Save size={16} /> Save Override
+        </button>
+        <button
+          type="reset"
+          class="admin-btn admin-btn-secondary"
+          style="padding:0.625rem 1.5rem;display:inline-flex;align-items:center;gap:0.5rem;"
+        >
+          <RotateCcw size={16} /> Reset
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Existing Overrides Table -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <TableProperties size={20} class="text-brand" />
+      <h2 style="margin:0;">Active SEO Overrides</h2>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Custom Title</th>
+            <th>Custom Description</th>
+            <th>Custom H1</th>
+            <th>FAQs</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="overrides-table-body">
+          <!-- Demo entries -->
+          <tr>
+            <td>
+              <div style="font-weight:600;">/delhi/connaught-place/</div>
+              <div style="font-size:0.6875rem;color:#94a3b8;">
+                Delhi → Connaught Place
+              </div>
+            </td>
+            <td
+              style="font-size:0.8125rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+            >
+              Best Plumber & Electrician in CP Delhi — HomeServ
+            </td>
+            <td
+              style="font-size:0.75rem;color:#64748b;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+            >
+              Find verified plumbers and electricians in Connaught Place…
+            </td>
+            <td style="font-size:0.8125rem;">
+              <span class="admin-badge admin-badge-green">Custom</span>
+            </td>
+            <td><span class="admin-badge admin-badge-blue">3 FAQs</span></td>
+            <td>
+              <div class="admin-actions">
+                <button class="admin-btn admin-btn-secondary admin-btn-sm" style="display:inline-flex;align-items:center;gap:0.25rem;"
+                  ><Pencil size={13} /> Edit</button
+                >
+                <button class="admin-btn admin-btn-danger admin-btn-sm" title="Delete" style="display:inline-flex;align-items:center;justify-content:center;"
+                  ><Trash2 size={13} /></button
+                >
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="font-weight:600;">/gurgaon/cyber-city/</div>
+              <div style="font-size:0.6875rem;color:#94a3b8;">
+                Gurgaon → Cyber City
+              </div>
+            </td>
+            <td style="font-size:0.8125rem;">
+              AC Repair in Cyber City Gurgaon — Same Day Service
+            </td>
+            <td style="font-size:0.75rem;color:#64748b;">
+              Top-rated AC repair services in Cyber City…
+            </td>
+            <td style="font-size:0.8125rem;">
+              <span class="admin-badge admin-badge-green">Custom</span>
+            </td>
+            <td><span class="admin-badge admin-badge-blue">4 FAQs</span></td>
+            <td>
+              <div class="admin-actions">
+                <button class="admin-btn admin-btn-secondary admin-btn-sm" style="display:inline-flex;align-items:center;gap:0.25rem;"
+                  ><Pencil size={13} /> Edit</button
+                >
+                <button class="admin-btn admin-btn-danger admin-btn-sm" title="Delete" style="display:inline-flex;align-items:center;justify-content:center;"
+                  ><Trash2 size={13} /></button
+                >
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SERP Preview -->
+  <div class="admin-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;">
+      <Search size={20} class="text-brand" />
+      <h2 style="margin:0;">Google SERP Preview</h2>
+    </div>
+    <p style="font-size:0.8125rem;color:#64748b;margin-bottom:1rem;">
+      This is how your page will appear in Google search results:
+    </p>
+
+    <div style="max-width:600px;font-family:Arial,sans-serif;">
+      <div
+        style="font-size:1.125rem;color:#1a0dab;margin-bottom:0.125rem;cursor:pointer;"
+        id="serp-title"
+      >
+        Home Services in Connaught Place, Delhi — Plumber, Electrician |
+        HomeServ
+      </div>
+      <div
+        style="font-size:0.8125rem;color:#006621;margin-bottom:0.25rem;"
+        id="serp-url"
+      >
+        https://delhincrhomeservices.com/delhi/connaught-place/
+      </div>
+      <div
+        style="font-size:0.8125rem;color:#4d5156;line-height:1.4;"
+        id="serp-desc"
+      >
+        Find verified home service professionals in Connaught Place, Delhi.
+        Trusted plumbers, electricians, AC repair. Direct call & WhatsApp. PIN:
+        110001
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { regions } from "../../../data/regions";
+
+  // Auth guard
+  if (sessionStorage.getItem("admin_auth") !== "true") {
+    window.location.href = "/admin/login";
+  }
+
+  const regionSelect = document.getElementById(
+    "seo-region",
+  ) as HTMLSelectElement | null;
+  const localitySelect = document.getElementById(
+    "seo-locality",
+  ) as HTMLSelectElement | null;
+  const titleInput = document.getElementById(
+    "seo-title",
+  ) as HTMLInputElement | null;
+  const descInput = document.getElementById(
+    "seo-description",
+  ) as HTMLTextAreaElement | null;
+
+  function updateSERP() {
+    const region = regionSelect?.value || "";
+    const locality = localitySelect?.value || "";
+    const regionName = regionSelect?.selectedOptions[0]?.text || "";
+    const localityName = localitySelect?.selectedOptions[0]?.text || "";
+
+    const serpTitle = document.getElementById("serp-title");
+    const serpUrl = document.getElementById("serp-url");
+    const serpDesc = document.getElementById("serp-desc");
+
+    if (serpTitle) {
+      serpTitle.textContent = titleInput?.value.trim()
+        ? titleInput.value.trim()
+        : `Home Services in ${localityName || "Local Area"}, ${regionName || "Delhi NCR"} — Plumber, Electrician | HomeServ`;
+    }
+    if (serpUrl) {
+      serpUrl.textContent =
+        region && locality
+          ? `https://delhincrhomeservices.com/${region}/${locality}/`
+          : "https://delhincrhomeservices.com/delhi/connaught-place/";
+    }
+    if (serpDesc) {
+      serpDesc.textContent = descInput?.value.trim()
+        ? descInput.value.trim()
+        : `Find verified home service professionals in ${localityName || "your area"}, ${regionName || "Delhi NCR"}. Trusted plumbers, electricians, AC repair.`;
+    }
+  }
+
+  regionSelect?.addEventListener("change", () => {
+    const selectedSlug = regionSelect.value;
+    const reg = regions.find((r) => r.slug === selectedSlug);
+    if (localitySelect) {
+      localitySelect.innerHTML = '<option value="">Select locality</option>';
+      if (reg && reg.localities) {
+        reg.localities.forEach((loc) => {
+          const opt = document.createElement("option");
+          opt.value = loc.slug;
+          opt.textContent = loc.name;
+          localitySelect.appendChild(opt);
+        });
+      }
+    }
+    updateSERP();
+  });
+
+  localitySelect?.addEventListener("change", updateSERP);
+
+  // Character counters
+  titleInput?.addEventListener("input", () => {
+    const len = titleInput.value.length;
+    const counter = document.getElementById("title-counter");
+    if (counter) {
+      counter.textContent = `${len} / 60 characters`;
+      counter.style.color = len > 60 ? "#ef4444" : "#64748b";
+    }
+    updateSERP();
+  });
+
+  descInput?.addEventListener("input", () => {
+    const len = descInput.value.length;
+    const counter = document.getElementById("desc-counter");
+    if (counter) {
+      counter.textContent = `${len} / 155 characters`;
+      counter.style.color = len > 155 ? "#ef4444" : "#64748b";
+    }
+    updateSERP();
+  });
+
+  // Add FAQ row
+  document.getElementById("add-faq-btn")?.addEventListener("click", () => {
+    const container = document.getElementById("faq-container");
+    const row = document.createElement("div");
+    row.className = "faq-row";
+    row.style.cssText =
+      "display:grid;grid-template-columns:1fr 2fr auto;gap:0.5rem;margin-bottom:0.5rem;";
+    row.innerHTML = `
+      <input class="admin-input faq-q" placeholder="Question" />
+      <input class="admin-input faq-a" placeholder="Answer" />
+      <button type="button" class="admin-btn admin-btn-danger admin-btn-sm faq-del-btn" style="display:inline-flex;align-items:center;justify-content:center;" title="Remove FAQ">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+      </button>
+    `;
+    const delBtn = row.querySelector(".faq-del-btn");
+    delBtn?.addEventListener("click", () => row.remove());
+    container?.appendChild(row);
+  });
+
+  // Form submit
+  document.getElementById("seo-form")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    alert(
+      "SEO override saved successfully!\n\nIn production, this updates the seo_metadata table in Supabase and triggers a page rebuild.",
+    );
+  });
+</script>

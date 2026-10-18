@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+/* =============================================
+   Delhi-NCR Home Services — Design Tokens
+   ============================================= */
+@theme {
+  --color-brand: #0d9488;
+  --color-brand-light: #14b8a6;
+  --color-brand-dark: #0f766e;
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-accent: #f59e0b;
+  --color-accent-dark: #d97706;
+  --color-surface: #ffffff;
+  --color-bg: #f8fafc;
+  --color-ink: #1e293b;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-wa: #25d366;
+  --color-wa-dark: #1da851;
+  --color-premium-bg: #fffbeb;
+  --color-premium-border: #f59e0b;
+  --color-premium-text: #92400e;
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* =============================================
+   Base Styles
+   ============================================= */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================
+   Card Styles
+   ============================================= */
+.card {
+  background: var(--color-surface);
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card-premium {
+  border-left: 4px solid var(--color-premium-border);
+  background: var(--color-premium-bg);
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.15);
+}
+
+.card-premium:hover {
+  box-shadow: 0 8px 30px rgba(245, 158, 11, 0.22);
+}
+
+/* =============================================
+   Button Styles
+   ============================================= */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--color-brand);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.1s ease;
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.btn-primary:hover {
+  background: var(--color-brand-dark);
+  transform: translateY(-1px);
+}
+
+.btn-wa {
+  background: var(--color-wa);
+}
+
+.btn-wa:hover {
+  background: var(--color-wa-dark);
+}
+
+.btn-call {
+  background: var(--color-brand);
+}
+
+.btn-call:hover {
+  background: var(--color-brand-dark);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  color: var(--color-brand);
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  border: 2px solid var(--color-brand);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.btn-outline:hover {
+  background: var(--color-brand);
+  color: white;
+}
+
+/* =============================================
+   Search Bar (Inspired by Zukho)
+   ============================================= */
+.search-bar {
+  background: var(--color-ink);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.search-bar select {
+  width: 100%;
+  padding: 0.625rem 2rem 0.625rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #475569;
+  border-radius: 0.375rem;
+  background: white;
+  color: var(--color-ink);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 0.75rem;
+}
+
+/* =============================================
+   Badge Styles
+   ============================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.badge-verified {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-premium {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.badge-24x7 {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* =============================================
+   Rating Stars
+   ============================================= */
+.stars {
+  color: #f59e0b;
+  letter-spacing: 2px;
+}
+
+/* =============================================
+   City Grid (Inspired by Skokka / Zukho city columns)
+   ============================================= */
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem;
+}
+
+.city-grid a {
+  display: block;
+  padding: 0.625rem 0.75rem;
+  color: var(--color-brand);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  transition: background 0.2s ease;
+}
+
+.city-grid a:hover {
+  background: var(--color-brand-50);
+  color: var(--color-brand-dark);
+}
+
+/* =============================================
+   Animations
+   ============================================= */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

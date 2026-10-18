@@ -1,0 +1,47 @@
+---
+/**
+ * SearchBar.astro — Search/filter bar inspired by Zukho's black search panel
+ * Pure HTML form, zero client JS
+ */
+import { regions } from "../data/regions";
+import { categories } from "../data/categories";
+import { Search } from "lucide-astro";
+---
+
+<form class="search-bar" method="get" action="/search">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+    <!-- Category -->
+    <div>
+      <label
+        for="search-category"
+        class="block text-sm font-medium text-white mb-1">Service</label
+      >
+      <select id="search-category" name="category">
+        <option value="">All Services</option>
+        {categories.map((cat) => <option value={cat.slug}>{cat.name}</option>)}
+      </select>
+    </div>
+
+    <!-- Region -->
+    <div>
+      <label
+        for="search-region"
+        class="block text-sm font-medium text-white mb-1">City / Region</label
+      >
+      <select id="search-region" name="region">
+        <option value="">All Delhi-NCR</option>
+        {regions.map((r) => <option value={r.slug}>{r.name}</option>)}
+      </select>
+    </div>
+
+    <!-- Submit -->
+    <div class="flex items-end">
+      <button
+        type="submit"
+        class="btn-primary w-full bg-accent! hover:bg-accent-dark! text-ink font-bold flex items-center justify-center gap-2"
+      >
+        <Search size={18} /> Search
+      </button>
+    </div>
+  </div>
+</form>

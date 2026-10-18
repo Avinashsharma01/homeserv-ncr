@@ -1,0 +1,46 @@
+---
+/**
+ * CategoryIcon.astro — Dynamic Lucide icon mapping for service categories
+ * Renders a crisp vector SVG icon corresponding to each service slug
+ */
+import {
+  Wrench,
+  Zap,
+  Snowflake,
+  Hammer,
+  Paintbrush,
+  Truck,
+  Bug,
+  Sparkles,
+  Droplet,
+  WashingMachine,
+} from "lucide-astro";
+
+interface Props {
+  category: string;
+  size?: number;
+  class?: string;
+}
+
+const { category, size = 20, class: className = "" } = Astro.props;
+
+// Category slug mapping to Lucide component
+const categorySlug = (category || "").toLowerCase();
+
+const iconMap = {
+  plumber: Wrench,
+  electrician: Zap,
+  "ac-repair": Snowflake,
+  carpenter: Hammer,
+  painter: Paintbrush,
+  "movers-packers": Truck,
+  "pest-control": Bug,
+  cleaning: Sparkles,
+  "ro-service": Droplet,
+  "appliance-repair": WashingMachine,
+};
+
+const IconComponent = iconMap[categorySlug as keyof typeof iconMap] || Wrench;
+---
+
+<IconComponent size={size} class={className} />

@@ -1,0 +1,102 @@
+---
+/**
+ * /terms.astro — Terms of Service page
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SEOHead from "../components/SEOHead.astro";
+---
+
+<BaseLayout>
+  <SEOHead
+    slot="head"
+    title="Terms of Service — HomeServ NCR"
+    description="Terms and conditions governing the use of HomeServ NCR directory platform for service providers and consumers in Delhi NCR."
+    canonicalPath="/terms"
+    breadcrumbs={[
+      { name: "Home", url: "/" },
+      { name: "Terms of Service", url: "/terms" },
+    ]}
+  />
+
+  <nav aria-label="Breadcrumb" class="mb-6">
+    <ol class="flex items-center gap-1 text-sm text-muted">
+      <li><a href="/" class="hover:text-brand no-underline">Home</a></li>
+      <li class="before:content-['/'] before:mx-1 font-medium text-ink">Terms of Service</li>
+    </ol>
+  </nav>
+
+  <article class="max-w-3xl mx-auto py-4 prose prose-slate">
+    <h1 class="text-3xl font-extrabold text-ink mb-2">Terms of Service</h1>
+    <p class="text-sm text-muted mb-8">Last Updated: October 2026</p>
+
+    <div class="space-y-6 text-sm leading-relaxed text-ink/80">
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">1. Agreement to Terms</h2>
+        <p>
+          By accessing or using HomeServ NCR (delhincrhomeservices.com), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">2. Nature of the Service (Directory Disclaimer)</h2>
+        <p class="mb-2">
+          <strong>HomeServ NCR is an online advertising and directory platform only.</strong>
+        </p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>We do <strong>not</strong> employ plumbers, electricians, technicians, or other service professionals listed on the site.</li>
+          <li>We do <strong>not</strong> guarantee, inspect, endorse, or warranty the quality, safety, legality, or pricing of any services performed by independent third-party providers.</li>
+          <li>Contracts, price negotiations, work agreements, and payments take place solely and directly between the customer and the service provider.</li>
+          <li>HomeServ NCR charges zero customer booking commissions and never handles financial transactions between users and service professionals.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">3. Service Provider Responsibilities</h2>
+        <p class="mb-2">Service providers listing their services agree that:</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>All information supplied (name, phone number, rates, experience) is accurate and not deceptive.</li>
+          <li>They possess all required local licenses, permits, and trade qualifications needed to carry out their trades in Delhi, Haryana, or Uttar Pradesh.</li>
+          <li>They will treat customers respectfully and handle quotes transparently without surprise surcharges.</li>
+          <li>We reserve the right to suspend, terminate, or remove any listing at our discretion if fraud, abuse, or consumer complaints arise.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">4. User Safety & Recommendations</h2>
+        <p>
+          We strongly advise users to:
+        </p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Never pay full service amounts in advance before work commences.</li>
+          <li>Obtain a clear cost estimate in writing or on WhatsApp before authorising work.</li>
+          <li>Verify technician ID upon arrival at your premises.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">5. Limitation of Liability</h2>
+        <p>
+          To the maximum extent permitted by applicable Indian law, HomeServ NCR, its founders, and affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages resulting from transactions, disputes, property damage, or interactions with service providers found on this platform.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">6. Governing Law & Jurisdiction</h2>
+        <p>
+          These Terms shall be governed and construed in accordance with the laws of India. Any legal dispute or claim arising out of these terms shall be subject to the exclusive jurisdiction of the competent courts in New Delhi, India.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">7. Contact Information</h2>
+        <p>
+          For queries regarding these Terms of Service:
+        </p>
+        <p class="mt-2 font-medium">
+          HomeServ NCR Legal Desk<br />
+          Email: <a href="mailto:support@homeservncr.com" class="text-brand">support@homeservncr.com</a>
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
