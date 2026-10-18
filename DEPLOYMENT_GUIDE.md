@@ -106,11 +106,12 @@ Fill in the build configuration:
 - **Framework Preset:** `Astro`
 - **Build Command:** `npm run build`
 - **Build Output Directory:** `dist`
+- **Deploy Command:** **LEAVE COMPLETELY EMPTY / BLANK** (⚠️ Do NOT enter `npx wrangler deploy` or any deploy command! Cloudflare Pages automatically serves the `dist` directory. Entering `wrangler deploy` triggers a Worker build which will fail.)
 - **Environment Variables:**
   - `NODE_VERSION`: `22` (or `24`)
 
 ### Step 4: Deploy
-Click **Save and Deploy**. Cloudflare Pages will clone your repository, run the build, and deploy your site to a global CDN URL (e.g., `https://homeserv-ncr.pages.dev`) in ~30 seconds.
+Click **Save and Deploy**. Cloudflare Pages will clone your repository, run `npm run build`, and deploy your 193 static pages to `https://homeserv-ncr.pages.dev` in ~30 seconds.
 
 ---
 
@@ -234,3 +235,37 @@ Once live on your custom domain, execute these launch steps:
 - **Domain Cost:** ~₹800 – ₹1,200 / year (standard `.com` or `.in` registration).
 - **SSL Certificate:** Free and automatically renewed.
 - **Maintenance:** Pure static files eliminate server patches, database downtime, and backend security vulnerabilities.
+
+---
+
+## 11. Troubleshooting Common Deployment Errors
+
+### ❌ Error: `Executing user deploy command: npx wrangler deploy` / `Failed to get static paths from Cloudflare prerender server (500)`
+
+**What went wrong:**
+Your build succeeded completely:
+```
+13:35:59 [build] 193 page(s) built in 2.53s
+13:35:59 [build] Complete!
+Success: Build command completed
+```
+However, Cloudflare then attempted to run:
+```
+Executing user deploy command: npx wrangler deploy
+...
+Configuring project for Astro with "astro add cloudflare"
+```
+`npx wrangler deploy` is meant for **Cloudflare Workers** (serverless functions), NOT **Cloudflare Pages** (static sites). Running this causes Wrangler to auto-install `@astrojs/cloudflare` SSR adapter and fail during miniflare prerendering.
+
+**How to Fix:**
+1. Go to your project in the **Cloudflare Dashboard**.
+2. Navigate to **Settings** → **Builds & deployments** (or **Build configuration**).
+3. Find the **Deploy command** field.
+4. **Delete / Clear the Deploy command completely** so it is empty.
+5. Ensure your settings are:
+   - **Framework preset:** `Astro`
+   - **Build command:** `npm run build`
+   - **Build output directory:** `dist`
+   - **Deploy command:** *(Leave empty / blank)*
+6. Re-trigger the build. Cloudflare Pages will build the 193 pages and deploy them instantly.
+
